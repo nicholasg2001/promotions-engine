@@ -8,6 +8,7 @@ class LowestPriceFilter implements PromotionsFilterInterface
 {
     public function apply(PromotionEnquiryInterface $enquiry): PromotionEnquiryInterface
     {
-        $enquiry->setDiscountedPrice
+        // $enquiry->setDiscountedPrice
+        return $enquiry;
     }
 }
