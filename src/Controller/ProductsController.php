@@ -6,7 +6,7 @@ use App\Entity\Promotion;
 use App\Filter\PromotionsFilterInterface;
 use App\Repository\ProductRepository;
 use App\Service\Serializer\DTOSerializer;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +19,7 @@ class ProductsController extends AbstractController
 
     public function __construct(
         private ProductRepository $repository,
-        private EntityManager $entityManager
+        private EntityManagerInterface $entityManager
     )
     {
 
@@ -44,13 +44,13 @@ class ProductsController extends AbstractController
         $promotions = $this->entityManager->getRepository(Promotion::class)->findValidPromotionForProduct(
             $product,
             date_create_immutable($lowestPriceEnquiry->getRequestDate())
-        );
+        ); // null if not found in DB
 
-        $modifiedEnquiry = $promotionsFilter->apply($lowestPriceEnquiry, $promotions);
-
+        $modifiedEnquiry = $promotionsFilter->apply($lowestPriceEnquiry, ...$promotions);
 
         $responseContent = $serializer->serialize($modifiedEnquiry, 'json');
-        return new Response($responseContent, 200);
+
+        return new JsonResponse(data: $responseContent, status: Response::HTTP_OK, json: true);
     }
 
 
