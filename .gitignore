@@ -104,3 +104,5 @@
 
 # End of https://www.toptal.com/developers/gitignore/api/symfony,visualstudiocode
 .idea/
+
+mysql
